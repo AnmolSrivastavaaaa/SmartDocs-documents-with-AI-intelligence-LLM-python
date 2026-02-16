@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Private Knowledge Q&A</title>
+    <style>
+        /* ----- Body ----- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 40px;
+            color: #333;
+        }
+
+        /* ----- Container Boxes ----- */
+        .box {
+            background: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            max-width: 600px;
+            width: 100%;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+        }
+
+        /* ----- Headings ----- */
+        h1 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+        h3 {
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        /* ----- Inputs and Textareas ----- */
+        input[type="file"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input[type="file"]:focus, textarea:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102,126,234,0.5);
+            outline: none;
+        }
+
+        /* ----- Buttons ----- */
+        button {
+            margin-top: 12px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        button:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+
+        /* ----- Answer Box ----- */
+        p.answer {
+            background: linear-gradient(135deg, #f3f4f6, #e0e7ff);
+            padding: 15px;
+            border-radius: 10px;
+            line-height: 1.5;
+            font-size: 15px;
+        }
+        small {
+            display: block;
+            color: #555;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        /* ----- Uploaded Docs List ----- */
+        ul {
+            list-style: square inside;
+            padding-left: 0;
+        }
+
+        /* ----- Responsive ----- */
+        @media(max-width: 650px){
+            body { padding: 20px; }
+            .box { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div style="width:100%; max-width:600px;">
+    <h1>Private Knowledge Q&A</h1>
+
+    {% if error %}
+    <div class="box" style="background:#ffe5e5;color:#900;">
+        <strong>Error:</strong> {{ error }}
+    </div>
+    {% endif %}
+
+    <div class="box">
+        <h3>Upload Document</h3>
+        <form method="post" action="/upload" enctype="multipart/form-data">
+            <input type="file" name="file">
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+
+    {% if uploaded_files %}
+    <div class="box">
+        <h3>Uploaded Documents</h3>
+        <ul>
+            {% for doc in uploaded_files %}
+            <li>{{ doc }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="box">
+        <h3>Ask Question</h3>
+        <form method="post" action="/ask">
+            <textarea name="question" rows="4" placeholder="Ask something..."></textarea>
+            <button type="submit">Ask</button>
+        </form>
+    </div>
+
+    {% if answer %}
+    <div class="box">
+        <h3>Answer</h3>
+        <p class="answer">{{ answer }}</p>
+        {% if source %}
+        <small>Answer came from: {{ source }}</small>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
